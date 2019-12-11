@@ -1,28 +1,36 @@
 package objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
-
-@Entity
-@Table(name = "objects.item")
-public class item implements Serializable{
+public class item {
     private static final long serialVersionUID = 1L;
+    private String itemName, itemLink;
+    private int itemVatPrice, id;
+    private String itemImage;
 
-    @Id
-            @Column(name = "")
-    String itemName, itemLink, itemWebsite;
-    int itemVatPrice, itemExVatPrice;
+    public String getItemImage() {
+        return itemImage;
+    }
 
-    public item(String iName, int iVatPrice, int iExVatPrice, String iLink, String iWebsite) {
+    public void setItemImage(String itemImage) {
+        this.itemImage = itemImage;
+    }
+
+    public item() {}
+
+    public item(String iName, int iVatPrice, String iLink, String iImageLink) {
         this.itemName = iName;
         this.itemVatPrice = iVatPrice;
-        this.itemExVatPrice = iExVatPrice;
+        this.itemImage = iImageLink;
         this.itemLink = iLink;
-        this.itemWebsite = iWebsite;
     }
+
+    public void setId( int id ) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }
@@ -39,14 +47,6 @@ public class item implements Serializable{
         return itemLink;
     }
 
-    public void setItemExVatPrice(int itemOrgPrice) {
-        this.itemExVatPrice = itemOrgPrice;
-    }
-
-    public int getItemExVatPrice() {
-        return itemExVatPrice;
-    }
-
     public void setItemLink(String itemLink) {
         this.itemLink = itemLink;
     }
@@ -55,13 +55,7 @@ public class item implements Serializable{
         return itemVatPrice;
     }
 
-    public void setItemWebsite(String itemWebsite) {
-        this.itemWebsite = itemWebsite;
-    }
 
-    public String getItemWebsite() {
-        return itemWebsite;
-    }
 
     @Override
     public String toString() {

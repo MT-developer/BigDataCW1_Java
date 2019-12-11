@@ -9,10 +9,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class scrapeScrewfix extends Thread {
-    public static void scrape(String query) throws InterruptedException {
+    public void run() {
+        String query = "power";
         boolean breakCondition = true;
         String itemClassname = "product_box_";
         String xpath = "/html/body/div[8]/div[1]/div/div[2]/div[2]/a[1]";
@@ -84,11 +86,18 @@ public class scrapeScrewfix extends Thread {
             listing.clear();
 
 
-            int currentPage = driver.findElement(By.xpath("/html/body/main/div[2]/div/div/div[2]/div/div[1]/div/div/div/span[2]/label")).getText().charAt(5);
+
+            String currentPage = driver.findElement(By.xpath("/html/body/main/div[2]/div/div/div[2]/div/div[1]/div/div/div/span[2]/label")).getText();
             int maxPage = driver.findElement(By.xpath("/html/body/main/div[2]/div/div/div[2]/div/div[1]/div/div/div/span[2]/label")).getText().charAt(10);
 
+            String numbersLine = currentPage.replaceAll("[^0-9]+", " ");
 
-            if(currentPage == maxPage) {
+            String[] strArray = numbersLine.split(" ");
+
+            List<Integer> intArrayList = new ArrayList<Integer>();
+            System.out.println(currentPage);
+
+            if(strArray[0] == strArray[1]) {
                 breakCondition = false;
             }
             try {
@@ -96,11 +105,13 @@ public class scrapeScrewfix extends Thread {
                 // WebElement element = driver.findElementByClassName(nextButtonClass);
                 driver.executeScript("arguments[0].click();", nextButtonele);
                 System.out.println("clicked element");
-                Thread.sleep(4000);
+                Thread.sleep(5000);
 
             } catch (NoSuchElementException e) {
                 System.out.println("No next page found. Finished scraping");
                 breakCondition = false;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } while(breakCondition);
         System.out.println("DONE");

@@ -9,11 +9,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class scrapeWickes {
+public class scrapeWickes extends Thread {
 
-    public static void scrape(String query) throws InterruptedException {
+    public void run() {
+        String query = "power";
         boolean breakCondition = true;
-        String itemClassname = "ais-hits--objects.item";
+        String itemClassname = "product-card";
 
         FirefoxDriver driver = new FirefoxDriver();
         WebDriverWait wait = new WebDriverWait(driver,5);
@@ -26,7 +27,7 @@ public class scrapeWickes {
         do {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(itemClassname)));
 
-            List<WebElement> listing = driver.findElements(By.className(itemClassname));
+            List<WebElement> listing = driver.findElements(By.xpath("//*[contains(@class,'card product-card ')]"));
             System.out.println("Found items: " + listing.size());
 
             if (listing.size() == 0) {
@@ -34,28 +35,28 @@ public class scrapeWickes {
             }
             for (WebElement item : listing) {
                 System.out.println("Scraping for info");
-                WebElement priceString = item.findElement(By.cssSelector("span.sp-price"));
-                WebElement priceVatString = item.findElement(By.cssSelector("span.sp-exvat"));
-                WebElement nameString = item.findElement(By.className("search-product-name"));
+                WebElement priceString = item.findElement(By.xpath("//div[@class='product-card__price-value ']"));
+                String nameString = item.findElement(By.cssSelector("a")).getAttribute("title");
                 String linkString = item.findElement(By.cssSelector("a")).getAttribute("href");
 
 
-
-                System.out.println("Product name: " + nameString.getText().substring(nameString.getText().indexOf("\n")+1));
+                System.out.println("Product name: " + nameString);
                 System.out.println("Product price(VAT): " + priceString.getText());
-                System.out.println("Product price(exVAT): " + priceVatString.getText().substring(8));
                 System.out.println("Product link : " + linkString);
             }
             System.out.println("Finished scraping, navigating to next page....");
             try {
 
-                WebElement nextButton = driver.findElementByLinkText("Next Page");
+                WebElement nextButton = driver.findElementByLinkText("Next");
                 // WebElement element = driver.findElementByClassName(nextButtonClass);
                 driver.executeScript("arguments[0].click();", nextButton);
                 System.out.println("clicked element");
+                Thread.sleep(4000);
             } catch (NoSuchElementException e) {
                 System.out.println("No next page found. Finished scraping");
                 breakCondition = false;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         } while(breakCondition);
         System.out.println("DONE");

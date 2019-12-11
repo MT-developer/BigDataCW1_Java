@@ -15,7 +15,7 @@
         <!-- Assume test is the database name -->
 
         <property name = "hibernate.connection.url">
-            jdbc:mysql://localhost/test
+            jdbc:mysql://localhost/cw1
         </property>
 
         <property name = "hibernate.connection.username">
@@ -23,11 +23,11 @@
         </property>
 
         <property name = "hibernate.connection.password">
-            root123
+            root
         </property>
 
         <!-- List of XML mapping files -->
-        <mapping resource = "Employee.hbm.xml"/>
+        <mapping resource = "item.hbm.xml"></mapping>
 
     </session-factory>
 </hibernate-configuration>

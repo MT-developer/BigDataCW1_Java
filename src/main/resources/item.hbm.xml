@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "objects.item" table = "items">
+        <id name = "id" type = "int" column = "itemID">
+            <generator class="native"/>
+        </id>
+
+        <property name = "itemName" column = "item_name" type = "string"/>
+        <property name = "itemLink" column = "item_link" type = "string"/>
+        <property name = "itemImage" column = "item_image_link" type = "string"/>
+        <property name = "itemVatPrice" column = "item_price" type = "int"/>
+
+    </class>
+</hibernate-mapping>
