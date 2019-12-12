@@ -13,6 +13,6 @@
         <property name = "itemLink" column = "item_link" type = "string"/>
         <property name = "itemImage" column = "item_image_link" type = "string"/>
         <property name = "itemVatPrice" column = "item_price" type = "int"/>
-
+        <property name = "itemShopName" column = "item_shop_name" type = "string"/>
     </class>
 </hibernate-mapping>

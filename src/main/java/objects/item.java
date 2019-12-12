@@ -5,6 +5,26 @@ public class item {
     private String itemName, itemLink;
     private int itemVatPrice, id;
     private String itemImage;
+    private String itemShopName;
+
+
+    public item() {}
+
+    public item(String iName, int iVatPrice, String iLink, String iImageLink, String IShopName) {
+        this.itemName = iName;
+        this.itemVatPrice = iVatPrice;
+        this.itemImage = iImageLink;
+        this.itemLink = iLink;
+        this.itemShopName = IShopName;
+    }
+
+    public String getItemShopName() {
+        return itemShopName;
+    }
+
+    public void setItemShopName(String itemShopName) {
+        this.itemShopName = itemShopName;
+    }
 
     public String getItemImage() {
         return itemImage;
@@ -12,15 +32,6 @@ public class item {
 
     public void setItemImage(String itemImage) {
         this.itemImage = itemImage;
-    }
-
-    public item() {}
-
-    public item(String iName, int iVatPrice, String iLink, String iImageLink) {
-        this.itemName = iName;
-        this.itemVatPrice = iVatPrice;
-        this.itemImage = iImageLink;
-        this.itemLink = iLink;
     }
 
     public void setId( int id ) {

@@ -1,11 +1,15 @@
 package tasks;
 
+import objects.item;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.vals;
 
 import java.util.List;
 
@@ -14,9 +18,14 @@ public class scrapeWickes extends Thread {
     public void run() {
         String query = "power";
         boolean breakCondition = true;
-        String itemClassname = "product-card";
 
-        FirefoxDriver driver = new FirefoxDriver();
+        String itemClassname = "product-card";
+        FirefoxBinary firefoxBinary = new FirefoxBinary();
+        firefoxBinary.addCommandLineOptions("--headless");
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.setBinary(firefoxBinary);
+
+        FirefoxDriver driver = new FirefoxDriver(firefoxOptions);
         WebDriverWait wait = new WebDriverWait(driver,5);
 
         driver.navigate().to("https://www.wickes.co.uk/search?text=" + query);
@@ -38,11 +47,19 @@ public class scrapeWickes extends Thread {
                 WebElement priceString = item.findElement(By.xpath("//div[@class='product-card__price-value ']"));
                 String nameString = item.findElement(By.cssSelector("a")).getAttribute("title");
                 String linkString = item.findElement(By.cssSelector("a")).getAttribute("href");
+                WebElement imageLingString = item.findElement(By.cssSelector("a > img"));
 
 
                 System.out.println("Product name: " + nameString);
                 System.out.println("Product price(VAT): " + priceString.getText());
                 System.out.println("Product link : " + linkString);
+                System.out.println("Image link: " + imageLingString.getAttribute("src"));
+
+                int priceInt = Integer.parseInt(priceString.getText().replaceAll("[\\D]", ""));
+                objects.item tempItem = new item(nameString, priceInt, imageLingString.getAttribute("src"), linkString, "Wickes");
+
+                vals.arr_itemList.add(tempItem);
+
             }
             System.out.println("Finished scraping, navigating to next page....");
             try {
@@ -51,14 +68,16 @@ public class scrapeWickes extends Thread {
                 // WebElement element = driver.findElementByClassName(nextButtonClass);
                 driver.executeScript("arguments[0].click();", nextButton);
                 System.out.println("clicked element");
-                Thread.sleep(4000);
+                Thread.sleep(3500);
             } catch (NoSuchElementException e) {
                 System.out.println("No next page found. Finished scraping");
+                vals.set_bool_Wickes_true();
                 breakCondition = false;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         } while(breakCondition);
+        vals.set_bool_Wickes_true();
         System.out.println("DONE");
     }
 }

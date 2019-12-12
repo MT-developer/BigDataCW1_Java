@@ -1,12 +1,16 @@
 package tasks;
 
+import objects.item;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.firefox.FirefoxBinary;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.vals;
 
 import java.util.List;
 
@@ -17,7 +21,12 @@ public class scrapeHomeHardwareDirect extends Thread {
         boolean breakCondition = true;
         String itemClassname = "Tile";
 
-        FirefoxDriver driver = new FirefoxDriver();
+        FirefoxBinary firefoxBinary = new FirefoxBinary();
+        firefoxBinary.addCommandLineOptions("--headless");
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.setBinary(firefoxBinary);
+
+        FirefoxDriver driver = new FirefoxDriver(firefoxOptions);
         WebDriverWait wait = new WebDriverWait(driver, 5);
 
         driver.navigate().to("https://homehardwaredirect.co.uk/Products?SearchTxt=" + query);
@@ -40,11 +49,19 @@ public class scrapeHomeHardwareDirect extends Thread {
 
                     String nameString = item.findElement(By.cssSelector("a.thumb")).getAttribute("title");
                     String linkString = item.findElement(By.cssSelector("a")).getAttribute("href");
+                    WebElement imageLink = item.findElement(By.cssSelector("a.thumb > div"));
 
+                    String imageString = imageLink.getCssValue("background-image");
 
                     System.out.println("Product name: " + nameString);
                     System.out.println("Product price(VAT): " + priceString.getText());
                     System.out.println("Product link : " + linkString);
+                    System.out.println("Product image : " + imageString);
+
+                    int priceInt = Integer.parseInt(priceString.getText().replaceAll("[\\D]", ""));
+                    objects.item tempItem = new item(nameString, priceInt, imageString,linkString, "HomeHardwareDirect");
+
+                    vals.arr_itemList.add(tempItem);
                 }
                 System.out.println("Finished scraping, navigating to next page....");
 
@@ -57,8 +74,11 @@ public class scrapeHomeHardwareDirect extends Thread {
                 } catch (NoSuchElementException e) {
                     System.out.println("No next page found. Finished scraping");
                     breakCondition = false;
+                    vals.set_bool_HomeHardwareDirect_true();
+
                 }
             } while (breakCondition);
+            vals.set_bool_HomeHardwareDirect_true();
             System.out.println("DONE");
         } catch (StaleElementReferenceException e) {
             System.out.println("No next page found. Finished scraping page");

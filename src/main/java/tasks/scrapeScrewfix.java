@@ -1,11 +1,13 @@
 package tasks;
 
+import objects.item;
 import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.vals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +22,13 @@ public class scrapeScrewfix extends Thread {
         String xpath = "/html/body/div[8]/div[1]/div/div[2]/div[2]/a[1]";
         ArrayList<WebElement> listing = new ArrayList<WebElement>();
 
-
         FirefoxOptions options = new FirefoxOptions();
         options.addPreference("permissions.default.image", 2);
+        options.setHeadless(true);
         FirefoxDriver driver = new FirefoxDriver(options);
         WebDriverWait wait = new WebDriverWait(driver,5);
 
-
-        driver.navigate().to("https://www.screwfix.com/search?search=" + query);
+        driver.navigate().to("https://www.screwfix.com/search?search=power#page_size=100");
         System.out.println("Navigated correctly");
         System.out.println("Checking for cookie message");
         driver.switchTo().frame(driver.findElement(By.xpath("//iframe[@title='TrustArc Cookie Consent Manager']")));
@@ -75,11 +76,18 @@ public class scrapeScrewfix extends Thread {
                 WebElement priceVatString = item.findElement(By.cssSelector("#product_list_price_" + count));
                 WebElement nameString = item.findElement(By.cssSelector("#product_description_" + count));
                 String linkString = item.findElement(By.cssSelector("a")).getAttribute("href");
+                WebElement imageLink = item.findElement(By.id("product_image"));
 
                 System.out.println("Product name: " + nameString.getText());
                 System.out.println("Product price: " + priceVatString.getText());
                 System.out.println("Product link: " + linkString);
+                System.out.println("Product image: " + imageLink.getAttribute("src"));
                 count++;
+
+                int priceInt = Integer.parseInt(priceVatString.getText().replaceAll("[\\D]", ""));
+                objects.item tempItem = new item(nameString.getText().substring(nameString.getText().indexOf("\n") + 1), priceInt, imageLink.getAttribute("src"), linkString, "ScrewFix");
+                vals.arr_itemList.add(tempItem);
+
             }
             count = 1;
             System.out.println("Finished scraping, navigating to next page....");
@@ -99,21 +107,29 @@ public class scrapeScrewfix extends Thread {
 
             if(strArray[0] == strArray[1]) {
                 breakCondition = false;
+                vals.set_bool_ScrewFix_true();
             }
             try {
                 WebElement nextButtonele = driver.findElement(By.cssSelector(".md-11 > div:nth-child(1) > div:nth-child(1) > span:nth-child(2) > a:nth-child(3)"));
                 // WebElement element = driver.findElementByClassName(nextButtonClass);
                 driver.executeScript("arguments[0].click();", nextButtonele);
                 System.out.println("clicked element");
-                Thread.sleep(5000);
+                Thread.sleep(3500);
 
             } catch (NoSuchElementException e) {
                 System.out.println("No next page found. Finished scraping");
                 breakCondition = false;
+
+                vals.set_bool_ScrewFix_true();
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                vals.set_bool_ScrewFix_true();
+
             }
         } while(breakCondition);
+        vals.set_bool_ScrewFix_true();
         System.out.println("DONE");
+
     }
 }

@@ -44,8 +44,5 @@
             <artifactId>selenium-firefox-driver</artifactId>
             <version>3.141.59</version>
         </dependency>
-
     </dependencies>
-
-
 </project>
