@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public class vals {
     public static ArrayList<item> arr_itemList = new ArrayList<objects.item>();
 
-
     public static boolean bool_HomeHardwareDirect = false;
     public static boolean bool_RgcBuildingSupplies = false;
     public static boolean bool_ScrewFix = false;

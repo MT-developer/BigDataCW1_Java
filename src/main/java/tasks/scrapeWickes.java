@@ -35,20 +35,19 @@ public class scrapeWickes extends Thread {
 
         do {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(itemClassname)));
-
             List<WebElement> listing = driver.findElements(By.xpath("//*[contains(@class,'card product-card ')]"));
             System.out.println("Found items: " + listing.size());
 
             if (listing.size() == 0) {
                 break;
             }
+
             for (WebElement item : listing) {
                 System.out.println("Scraping for info");
                 WebElement priceString = item.findElement(By.xpath("//div[@class='product-card__price-value ']"));
                 String nameString = item.findElement(By.cssSelector("a")).getAttribute("title");
                 String linkString = item.findElement(By.cssSelector("a")).getAttribute("href");
                 WebElement imageLingString = item.findElement(By.cssSelector("a > img"));
-
 
                 System.out.println("Product name: " + nameString);
                 System.out.println("Product price(VAT): " + priceString.getText());
@@ -59,11 +58,10 @@ public class scrapeWickes extends Thread {
                 objects.item tempItem = new item(nameString, priceInt, imageLingString.getAttribute("src"), linkString, "Wickes");
 
                 vals.arr_itemList.add(tempItem);
-
             }
             System.out.println("Finished scraping, navigating to next page....");
-            try {
 
+            try {
                 WebElement nextButton = driver.findElementByLinkText("Next");
                 // WebElement element = driver.findElementByClassName(nextButtonClass);
                 driver.executeScript("arguments[0].click();", nextButton);
@@ -76,6 +74,7 @@ public class scrapeWickes extends Thread {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
         } while(breakCondition);
         vals.set_bool_Wickes_true();
         System.out.println("DONE");

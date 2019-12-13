@@ -7,19 +7,15 @@ import org.hibernate.cfg.Configuration;
 import tasks.*;
 import utils.vals;
 
-import java.util.ArrayList;
-
 public class main {
     private static SessionFactory factory;
     private static objects.item item;
     private static boolean started = false;
 
-
     public static void main(String[] args) throws InterruptedException {
         System.setProperty("webdriver.gecko.driver", "C:\\GeckDriver\\geckodriver.exe");
 
-
-                scrapeHomeHardwareDirect homeHardwareDirectThread = new scrapeHomeHardwareDirect();
+        scrapeHomeHardwareDirect homeHardwareDirectThread = new scrapeHomeHardwareDirect();
             scrapeRgcBuildingSupplies rgcBuildingSuppliesThread = new scrapeRgcBuildingSupplies();
             scrapeScrewfix screwfixThread = new scrapeScrewfix();
             scrapeToolstation toolstationThread = new scrapeToolstation();
@@ -58,15 +54,9 @@ public class main {
                     started = true;
                 }
             }
-
-
-
-        //scrapeAngliaToolCentre.scrape("screw"); // SWITCH TO rgcbuildingsupplies.CO.UK
-        /* Add few employee records in database */
-        //Integer empID1 = ME.addItem("Zara", 100, "test", "tessst");
+        //scrapeAngliaToolCentre.scrape("screw"); // SWITCHED TO rgcbuildingsupplies.CO.UK
     }
 
-    /* Method to CREATE an employee in the database */
     public Integer addItem(item item){
         Session session = factory.openSession();
         Transaction tx = null;

@@ -33,6 +33,7 @@ public class scrapeHomeHardwareDirect extends Thread {
         System.out.println("Navigated correctly");
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(itemClassname)));
         System.out.println("Found element");
+
         try {
             do {
                 wait.until(ExpectedConditions.visibilityOfElementLocated(By.className(itemClassname)));
